@@ -39,6 +39,7 @@ namespace LetsDateAPI
                 options.EnableDetailedErrors();
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +55,8 @@ namespace LetsDateAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
             app.UseAuthorization();
 
