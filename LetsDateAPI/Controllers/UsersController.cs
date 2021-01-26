@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace LetsDateAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly ApplicationDbContext _ctx;
 
