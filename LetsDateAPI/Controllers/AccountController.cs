@@ -51,7 +51,7 @@ namespace LetsDateAPI.Controllers
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
             }
             return user;
-        }
+        } 
 
         private async Task<bool> UserExists(string username)
         {
