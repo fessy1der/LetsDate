@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using LetsDateAPI.Data;
+using LetsDateAPI.Extensions;
 using LetsDateAPI.Interfaces;
 using LetsDateAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace LetsDateAPI
@@ -30,18 +34,16 @@ namespace LetsDateAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddAppServices(Configuration);
+            services.AddIdentityServices(Configuration);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LetsDateAPI", Version = "v1" });
             });
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.EnableDetailedErrors();
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
             services.AddCors();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +62,7 @@ namespace LetsDateAPI
 
             app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

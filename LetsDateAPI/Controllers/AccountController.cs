@@ -1,5 +1,6 @@
 ﻿using LetsDateAPI.Data;
 using LetsDateAPI.DTOs;
+using LetsDateAPI.Interfaces;
 using LetsDateAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,16 @@ namespace LetsDateAPI.Controllers
     public class AccountController : BaseController
     {
         private readonly ApplicationDbContext _ctx;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(ApplicationDbContext ctx)
+        public AccountController(ApplicationDbContext ctx, ITokenService tokenService)
         {
             _ctx = ctx;
+            _tokenService = tokenService;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
 
@@ -35,11 +38,15 @@ namespace LetsDateAPI.Controllers
             };
             _ctx.Users.Add(user);
             await _ctx.SaveChangesAsync();
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _ctx.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
             if (user == null) return Unauthorized("User does not exist");
@@ -50,7 +57,11 @@ namespace LetsDateAPI.Controllers
             {
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
             }
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         } 
 
         private async Task<bool> UserExists(string username)
