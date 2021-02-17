@@ -24,7 +24,7 @@ export class AccountService {
         }
       })
     )
-  }
+  }  
 
   setCurrentUser(user: User){
     this.currentUserSource.next(user);
@@ -33,5 +33,16 @@ export class AccountService {
   logout(){
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+  
+  register(model: any){
+    return this.http.post(this.baseUrl + 'account/register', model).pipe(
+      map((user: User) => {
+        if(user){
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSource.next(user);
+        }
+      })
+    )
   }
 }
