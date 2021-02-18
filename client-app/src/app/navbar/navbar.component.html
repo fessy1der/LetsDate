@@ -1,28 +1,28 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">Hook Up</a>
+      <a class="navbar-brand" routerLink='/'>Hook Up</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="accountService.currentUser$ | async">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Swipe</a>
+            <a class="nav-link" routerLink='/members' routerLinkActive='active'>Matches</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Matches</a>
+            <a class="nav-link" routerLink='/lists' routerLinkActive='active'>Lists</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Messages</a>
+            <a class="nav-link" routerLink='/messages' routerLinkActive='active'>Messages</a>
           </li>
         </ul>
         
         <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="accountService.currentUser$ | async" style="margin-left: 40%;">
             <li class="nav-item">
-                <a class="nav-link" href="#">Welcome User</a>
+                <a class="nav-link" href="#" routerLinkActive='active'>Welcome User</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
+              <a class="nav-link" href="#" routerLinkActive='active'>Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" (click)="logout()">Logout</a>

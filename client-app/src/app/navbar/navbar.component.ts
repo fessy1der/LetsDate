@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccountService } from '../services/account.service';
 import { User } from '../models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -13,14 +14,14 @@ export class NavbarComponent implements OnInit {
   loggedIn: boolean;
 
 
-  constructor(public accountService: AccountService) { }
+  constructor(public accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   login(){
     this.accountService.login(this.model).subscribe(response => {
-      console.log(response);
+      this.router.navigateByUrl('/members');
       this.loggedIn = true;
     }, error => {
       console.log(error);
@@ -29,6 +30,7 @@ export class NavbarComponent implements OnInit {
 
   logout(){
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 
 }
