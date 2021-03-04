@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AccountService } from '../services/account.service';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +15,7 @@ export class NavbarComponent implements OnInit {
   loggedIn: boolean;
 
 
-  constructor(public accountService: AccountService, private router: Router) { }
+  constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
   }
@@ -25,6 +26,7 @@ export class NavbarComponent implements OnInit {
       this.loggedIn = true;
     }, error => {
       console.log(error);
+      this.toastr.error(error.error);
     })
   }
 
